@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8" standalone="no" ?>
+<modDesc descVersion="46">
+	<author>Blacky_BPG</author>
+	<version>1.9.0.1</version>
+	<title>
+		<en>Longer maintenance intervals</en>
+		<de>Längere Wartungsintervalle</de>
+	</title>
+
+	<description>
+		<en>Extends the time until the next maintenance interval</en>
+		<de>Verlängert die Zeit bis zum nächsten Wartungsintervall</de>
+	</description>
+
+	<iconFilename>bpglogo.dds</iconFilename>
+	<multiplayer supported="true"/>
+
+	<extraSourceFiles>
+		<sourceFile filename="registerLongerWearTime.lua" />
+	</extraSourceFiles>
+</modDesc>
