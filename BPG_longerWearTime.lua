@@ -2,6 +2,7 @@
 -- Longer wear time for vehicles for FS19
 -- by Blacky_BPG
 -- 
+-- Version: 1.9.0.3      |    08.06.2021    fix ExtendedVehicleMaintenance calculation
 -- Version: 1.9.0.2      |    06.06.2021    add ExtendedVehicleMaintenance functionality
 -- Version: 1.9.0.1      |    24.05.2021    fix reload bug
 -- Version: 1.9.0.0      |    23.05.2021    initial version for FS19
@@ -77,7 +78,7 @@ function BPG_longerWearTime:onUpdateTick(dt, isActiveForInput, isActiveForInputI
 					end
 				end
 			end
-			if self.spec_ExtendedVehicleMaintenance ~= nil and self.spec_ExtendedVehicleMaintenance.MaintenanceTimes ~= nil then
+			if self.spec_ExtendedVehicleMaintenance ~= nil and self.spec_ExtendedVehicleMaintenance.MaintenanceTimes ~= nil and spec.LongerWearTimeFixedEVM == false then
 				if self.spec_ExtendedVehicleMaintenance.MaintenanceTimes == 0 then
 					self.spec_ExtendedVehicleMaintenance.MaintenanceTimes = 1
 				end
@@ -89,7 +90,7 @@ function BPG_longerWearTime:onUpdateTick(dt, isActiveForInput, isActiveForInputI
 		if self.spec_ExtendedVehicleMaintenance ~= nil and self.spec_ExtendedVehicleMaintenance.MaintenanceTimes ~= nil then
 			if spec.LongerWearTimeFixedEVMTimes ~= self.spec_ExtendedVehicleMaintenance.MaintenanceTimes then
 				local diff = self.spec_ExtendedVehicleMaintenance.MaintenanceTimes - spec.LongerWearTimeFixedEVMTimes
-				self.spec_ExtendedVehicleMaintenance.MaintenanceTimes = self.spec_ExtendedVehicleMaintenance.MaintenanceTimes + (diff * 2)
+				self.spec_ExtendedVehicleMaintenance.MaintenanceTimes = self.spec_ExtendedVehicleMaintenance.MaintenanceTimes + (diff * 3)
 				spec.LongerWearTimeFixedEVMTimes = self.spec_ExtendedVehicleMaintenance.MaintenanceTimes
 			end
 		end
