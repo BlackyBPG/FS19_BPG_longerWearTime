@@ -2,6 +2,7 @@
 -- Longer wear time for vehicles for FS19
 -- by Blacky_BPG
 -- 
+-- Version: 1.9.0.4      |    13.06.2021    correct the calculation value
 -- Version: 1.9.0.3      |    08.06.2021    fix ExtendedVehicleMaintenance calculation
 -- Version: 1.9.0.2      |    06.06.2021    add ExtendedVehicleMaintenance functionality
 -- Version: 1.9.0.1      |    24.05.2021    fix reload bug
@@ -62,18 +63,18 @@ function BPG_longerWearTime:onUpdateTick(dt, isActiveForInput, isActiveForInputI
 			local specW = self.spec_wearable
 			if specW ~= nil and specW.wearDuration ~= nil and specW.wearDuration ~= 0 then
 				spec.LongerWearTimeCorrected = true
-				specW.wearDuration = specW.wearDuration / 7.3 / 2
+				specW.wearDuration = specW.wearDuration / 14.6
 				if specW.wearableNodes ~= nil then
 					if spec.LongerWearTimeFixed == false then
 						spec.LongerWearTimeFixed = true
 						for _, nodeData in ipairs(specW.wearableNodes) do
-							self:setNodeWearAmount(nodeData, self:getNodeWearAmount(nodeData) / 7.3)
+							self:setNodeWearAmount(nodeData, self:getNodeWearAmount(nodeData) / 14.6)
 						end
 					end
 					if spec.LongerWearTimeFixedA == false then
 						spec.LongerWearTimeFixedA = true
 						for _, nodeData in ipairs(specW.wearableNodes) do
-							self:setNodeWearAmount(nodeData, self:getNodeWearAmount(nodeData) / 2)
+							self:setNodeWearAmount(nodeData, self:getNodeWearAmount(nodeData) / 4)
 						end
 					end
 				end
@@ -82,7 +83,7 @@ function BPG_longerWearTime:onUpdateTick(dt, isActiveForInput, isActiveForInputI
 				if self.spec_ExtendedVehicleMaintenance.MaintenanceTimes == 0 then
 					self.spec_ExtendedVehicleMaintenance.MaintenanceTimes = 1
 				end
-				self.spec_ExtendedVehicleMaintenance.MaintenanceTimes = self.spec_ExtendedVehicleMaintenance.MaintenanceTimes * 3
+				self.spec_ExtendedVehicleMaintenance.MaintenanceTimes = self.spec_ExtendedVehicleMaintenance.MaintenanceTimes * 2
 				spec.LongerWearTimeFixedEVMTimes = self.spec_ExtendedVehicleMaintenance.MaintenanceTimes
 				spec.LongerWearTimeFixedEVM = true
 			end
@@ -90,8 +91,12 @@ function BPG_longerWearTime:onUpdateTick(dt, isActiveForInput, isActiveForInputI
 		if self.spec_ExtendedVehicleMaintenance ~= nil and self.spec_ExtendedVehicleMaintenance.MaintenanceTimes ~= nil then
 			if spec.LongerWearTimeFixedEVMTimes ~= self.spec_ExtendedVehicleMaintenance.MaintenanceTimes then
 				local diff = self.spec_ExtendedVehicleMaintenance.MaintenanceTimes - spec.LongerWearTimeFixedEVMTimes
-				self.spec_ExtendedVehicleMaintenance.MaintenanceTimes = self.spec_ExtendedVehicleMaintenance.MaintenanceTimes + (diff * 3)
-				spec.LongerWearTimeFixedEVMTimes = self.spec_ExtendedVehicleMaintenance.MaintenanceTimes
+				if diff ~= 0 then
+					print("Info: Maintenance vehicle >"..tostring(self.confilgFileName).."< ")
+					print("    : An attempt was made to set the old value "..tostring(spec.LongerWearTimeFixedEVMTimes).." to "..tostring(self.spec_ExtendedVehicleMaintenance.MaintenanceTimes).." and will be corrected to "..tostring(self.spec_ExtendedVehicleMaintenance.MaintenanceTimes + (diff * 2)))
+					self.spec_ExtendedVehicleMaintenance.MaintenanceTimes = self.spec_ExtendedVehicleMaintenance.MaintenanceTimes + (diff * 2)
+					spec.LongerWearTimeFixedEVMTimes = self.spec_ExtendedVehicleMaintenance.MaintenanceTimes
+				end
 			end
 		end
 	end

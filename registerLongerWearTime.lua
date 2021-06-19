@@ -2,6 +2,7 @@
 -- Drive distance Vehicle Specilaization
 -- by Blacky_BPG
 -- 
+-- Version: 1.9.0.4      |    13.06.2021    correct the calculation value
 -- Version: 1.9.0.3      |    08.06.2021    fix ExtendedVehicleMaintenance calculation
 -- Version: 1.9.0.2      |    06.06.2021    add ExtendedVehicleMaintenance functionality
 -- Version: 1.9.0.1      |    24.05.2021    fix reload bug
@@ -10,7 +11,7 @@
 
 registerLongerWearTime = {}
 registerLongerWearTime.userDir = getUserProfileAppPath()
-registerLongerWearTime.version = "1.9.0.3  -  08.06.2021"
+registerLongerWearTime.version = "1.9.0.4  -  13.06.2021"
 
 if g_specializationManager:getSpecializationByName("BPG_longerWearTime") == nil then
 	g_specializationManager:addSpecialization("BPG_longerWearTime", "BPG_longerWearTime", Utils.getFilename("BPG_longerWearTime.lua",  g_currentModDirectory),true , nil)
