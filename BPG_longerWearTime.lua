@@ -2,6 +2,7 @@
 -- Longer wear time for vehicles for FS19
 -- by Blacky_BPG
 -- 
+-- Version: 1.9.0.8      |    19.07.2021    fix time calculation for extendet maintenance
 -- Version: 1.9.0.7      |    08.07.2021    fix damage display for TSX_EnhancedVehicle mod
 -- Version: 1.9.0.6      |    07.07.2021    rewrite code for simplified calculation
 -- Version: 1.9.0.5      |    27.06.2021    delete log messages
@@ -81,23 +82,6 @@ function BPG_longerWearTime:onUpdateTick(dt, isActiveForInput, isActiveForInputI
 		local specEVM = self.spec_ExtendedVehicleMaintenance
 		if specEVM ~= nil and specEVM.MaintenanceTimes ~= nil then
 			local toHours = (30 * specEVM.MaintenanceTimes) - self:getFormattedOperatingTime() + specEVM.Differenz + specEVM.BackupOperatingTimeXML
-			if spec.LongerWearTimeEVMTimes == -999 then
-				if toHours > 121 then
-					specEVM.MaintenanceTimes = specEVM.MaintenanceTimes - 1
-					specEVM.Differenz = self:getFormattedOperatingTime() - (15 * (specEVM.MaintenanceTimes - 1))
-					specEVM.DifferenzDays = self.age - (specEVM.SeasonsDays * (specEVM.MaintenanceTimes - 1))
-					ExtendedVehicleMaintenenanceEventFinish.sendEvent(self, specEVM.BackupAgeXML, specEVM.BackupOperatingTimeXML, specEVM.MaintenanceTimes, specEVM.Differenz, specEVM.DifferenzDays)
-					self:raiseDirtyFlags(specEVM.dirtyFlag)
-				elseif toHours < 0 then
-					specEVM.MaintenanceTimes = specEVM.MaintenanceTimes + 1
-					specEVM.Differenz = self:getFormattedOperatingTime() - (15 * (specEVM.MaintenanceTimes - 1))
-					specEVM.DifferenzDays = self.age - (specEVM.SeasonsDays * (specEVM.MaintenanceTimes - 1))
-					ExtendedVehicleMaintenenanceEventFinish.sendEvent(self, specEVM.BackupAgeXML, specEVM.BackupOperatingTimeXML, specEVM.MaintenanceTimes, specEVM.Differenz, specEVM.DifferenzDays)
-					self:raiseDirtyFlags(specEVM.dirtyFlag)
-				end
-				toHours = (30 * specEVM.MaintenanceTimes) - self:getFormattedOperatingTime() + specEVM.Differenz + specEVM.BackupOperatingTimeXML
-				spec.LongerWearTimeEVMTimes = specEVM.MaintenanceTimes
-			end
 			if spec.LongerWearTimeEVMTimes ~= specEVM.MaintenanceTimes then
 				if specEVM.MaintenanceTimes > 0 then
 					specEVM.MaintenanceTimes = specEVM.MaintenanceTimes + 1
@@ -112,6 +96,24 @@ function BPG_longerWearTime:onUpdateTick(dt, isActiveForInput, isActiveForInputI
 				repairValue = math.min(1,1 - (toHours / 30))
 			else
 				repairValue = 0
+				local send = false
+				while toHours > 121 do
+					send = true
+					specEVM.MaintenanceTimes = specEVM.MaintenanceTimes - 1
+					specEVM.Differenz = self:getFormattedOperatingTime() - (15 * (specEVM.MaintenanceTimes - 1))
+					specEVM.DifferenzDays = self.age - (specEVM.SeasonsDays * (specEVM.MaintenanceTimes - 1))
+					toHours = (30 * specEVM.MaintenanceTimes) - self:getFormattedOperatingTime() + specEVM.Differenz + specEVM.BackupOperatingTimeXML
+					if toHours < 0 then
+						specEVM.MaintenanceTimes = specEVM.MaintenanceTimes + 1
+						specEVM.Differenz = self:getFormattedOperatingTime() - (15 * (specEVM.MaintenanceTimes - 1))
+						specEVM.DifferenzDays = self.age - (specEVM.SeasonsDays * (specEVM.MaintenanceTimes - 1))
+					end
+				end
+				if send == true then
+					ExtendedVehicleMaintenenanceEventFinish.sendEvent(self, specEVM.BackupAgeXML, specEVM.BackupOperatingTimeXML, specEVM.MaintenanceTimes, specEVM.Differenz, specEVM.DifferenzDays)
+					self:raiseDirtyFlags(specEVM.dirtyFlag)
+				end
+				spec.LongerWearTimeEVMTimes = specEVM.MaintenanceTimes
 			end
 		end
 	elseif self.isServer and spec.checkTimer > 0 then

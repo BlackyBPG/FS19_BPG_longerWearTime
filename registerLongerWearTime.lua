@@ -2,6 +2,7 @@
 -- Drive distance Vehicle Specilaization
 -- by Blacky_BPG
 -- 
+-- Version: 1.9.0.8      |    19.07.2021    fix time calculation for extendet maintenance
 -- Version: 1.9.0.7      |    08.07.2021    fix damage display for TSX_EnhancedVehicle mod
 -- Version: 1.9.0.6      |    07.07.2021    rewrite code for simplified calculation
 -- Version: 1.9.0.5      |    27.06.2021    delete log messages
@@ -14,7 +15,7 @@
 
 registerLongerWearTime = {}
 registerLongerWearTime.userDir = getUserProfileAppPath()
-registerLongerWearTime.version = "1.9.0.7  -  08.07.2021"
+registerLongerWearTime.version = "1.9.0.8  -  19.07.2021"
 
 if g_specializationManager:getSpecializationByName("BPG_longerWearTime") == nil then
 	g_specializationManager:addSpecialization("BPG_longerWearTime", "BPG_longerWearTime", Utils.getFilename("BPG_longerWearTime.lua",  g_currentModDirectory),true , nil)
